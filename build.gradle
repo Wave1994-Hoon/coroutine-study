@@ -1,0 +1,106 @@
+buildscript {
+    ext {
+        kotlinVersion = '1.4.21'
+        springBootVersion = '2.4.1'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+    }
+}
+
+plugins {
+    id "com.liferay.wsdl.builder" version "3.0.1"
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-spring'
+apply plugin: 'kotlin-jpa'
+apply plugin: 'kotlin-kapt'
+apply plugin: "kotlin-allopen"
+
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+apply plugin: 'eclipse-wtp'
+apply plugin: 'war'
+apply plugin: 'idea'
+
+ext {
+    appName = 'rest-exam'
+}
+
+allOpen {
+    annotation("javax.persistence.Entity")
+}
+
+archivesBaseName = "${appName}"
+
+
+group = "study"
+version = "0.0.1-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-devtools')
+    implementation('org.springframework.boot:spring-boot-starter-tomcat')
+    implementation "org.springframework.boot:spring-boot-configuration-processor"
+    implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
+    implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1')
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    implementation group: 'fr.noop', name: 'subtitle', version: '0.9.0'
+    implementation 'org.jsoup:jsoup:1.10.3'
+    compile "khttp:khttp:1.0.0"
+
+    compile "org.json:json:20180813"
+    compile "org.apache.commons:commons-lang3:3.6"
+
+
+    testCompile('org.springframework.boot:spring-boot-starter-test') {
+        exclude module: 'junit'
+    }
+
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.2.0')
+    testCompile('org.junit.jupiter:junit-jupiter-params:5.2.0')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
+    testCompile "org.mockito:mockito-core:2.+"
+    testCompile('org.mockito:mockito-junit-jupiter:2.18.3')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    main.java.srcDirs += [file("$buildDir/generated/source/kapt/main")]
+}
