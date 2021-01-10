@@ -9,7 +9,7 @@ import kotlin.concurrent.thread
 
 @Component
 class basic {
-    fun test() {
+    suspend fun test() {
         /*
         * GlobalScope: 프로그램이 끝날때까지 계속 실행
         * launch: 코투틴 빌더, 빌더 내에서 로직 실행
